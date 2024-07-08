@@ -4,17 +4,15 @@
 typedef struct celula tCelula;
 typedef struct lista tTipoLista;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "arvoreBinariaBusca.h"
 
 tCelula* liberaCelula(tCelula* cel);
 
 tTipoLista* inicializaLista();
 
-void insereCelulaNaLista(char letra, int peso, tTipoLista* lista);
+void insereCelulaNaLista(tArvore* arv, tTipoLista* lista);
 
-void retiraItem(tTipoLista* lista, int v);
+void retiraItem(tTipoLista* lista, char letra);
 
 void imprimeLista(tTipoLista* lista);
 
