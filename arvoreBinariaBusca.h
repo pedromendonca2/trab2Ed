@@ -13,7 +13,7 @@ void abb_imprime(tArvore *a);
 
 tArvore *abb_busca(tArvore *r, int v);
 
-tArvore *abb_insere(tArvore *a, char letra, int peso);
+tArvore *abb_insere(tArvore *a, char letra, int peso, tArvore* t1, tArvore* t2);
 
 tArvore *abb_retira(tArvore *r, char letra, int peso);
 

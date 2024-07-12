@@ -27,28 +27,71 @@ tLista* inicializaLista(){
     return lista;
 }
 
-void insereCelulaNaLista(tArvore* arv, tLista* lista){
-
+void encontraLugarNaLista(tArvore* arv, tLista* lista){
+    tCelula* aux = lista->primeiro;
     tCelula* novo = malloc(sizeof(tCelula));
 
+    while(retornaPeso(arv) < retornaPeso(aux->arv)){
+        aux = aux->prox;
+    }
+
+    novo->arv = arv;
+    novo->prox = aux->prox;
+    aux->prox = novo;
+}
+
+void insereCelulaNaLista(tArvore* arv, tLista* lista){
+
     if(lista->ultimo == NULL){
+        tCelula* novo = malloc(sizeof(tCelula));
         lista->primeiro = lista->ultimo = novo;
         ////////////////////////////////////
         lista->ultimo->arv = arv;
         lista->ultimo->prox = NULL;
     } else if(retornaPeso(arv) >= retornaPeso(lista->ultimo->arv)){
+        tCelula* novo = malloc(sizeof(tCelula));
         lista->ultimo->prox = novo;
         lista->ultimo = lista->ultimo->prox;
         ///////////////////////////////////
         lista->ultimo->arv = arv;
         lista->ultimo->prox = NULL;
     } else{
-        novo->arv = arv;
-        novo->prox = lista->primeiro;
-        lista->primeiro = novo;
+        encontraLugarNaLista(arv, lista);
     }
 }
 
+void retiraItem(tLista* lista, tArvore* arv){
+    tCelula* ant = NULL;
+    tCelula* p = lista->primeiro;
+
+    while(p != NULL && p->arv != arv){
+        ant = p;
+        p = p->prox;
+    }
+
+    if(p == NULL) return;
+
+    if(p == lista->primeiro && p == lista->ultimo){
+        lista->primeiro = lista->ultimo = NULL;
+        //liberaCelula(p);
+        return; 
+    }
+
+    if(p == lista->ultimo){
+        lista->ultimo = ant; 
+        ant->prox = NULL; 
+        //liberaCelula(p);
+        return;
+    }
+
+    if(p == lista->primeiro){
+        lista->primeiro = p->prox;    
+    } else{
+        ant->prox = p->prox;
+    } 
+
+    //liberaCelula(p);
+}
 
 void imprimeLista(tLista* lista){
     tCelula* aux;
@@ -60,6 +103,19 @@ void imprimeLista(tLista* lista){
     }
 }
 
+int listaUnica(tLista* l){
+    if(l->primeiro == l->ultimo) return 1;
+    return 0;
+}
+
+tArvore* retornaPrimeiraArv(tLista* l){
+    return l->primeiro->arv;
+}
+
+tArvore* retornaSegundaArv(tLista *l){
+    return l->primeiro->prox->arv;
+}
+
 void liberaLista(tLista* lista){
     tCelula *cel = lista->primeiro;
 
@@ -69,36 +125,3 @@ void liberaLista(tLista* lista){
 
     free(lista);
 }
-
-// void retiraItem(tLista* lista, char letra){
-//     tCelula* ant = NULL;
-//     tCelula* p = lista->primeiro;
-
-//     while(p != NULL && retornaPreco(p->produto) != preco){
-//         ant = p;
-//         p = p->prox;
-//     }
-
-//     if(p == NULL) return;
-
-//     if(p == lista->primeiro && p == lista->ultimo){
-//         lista->primeiro = lista->ultimo = NULL;
-//         liberaCelula(p);
-//         return; 
-//     }
-
-//     if(p == lista->ultimo){
-//         lista->ultimo = ant; 
-//         ant->prox = NULL; 
-//         liberaCelula(p);
-//         return;
-//     }
-
-//     if(p == lista->primeiro){
-//         lista->primeiro = p->prox;    
-//     } else{
-//         ant->prox = p->prox;
-//     } 
-
-//     liberaCelula(p);
-// }

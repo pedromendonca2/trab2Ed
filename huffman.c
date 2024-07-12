@@ -1,8 +1,3 @@
-//em ordem crescente (oq menos pro que mais apareceu, um nó pra cada pra cada um)
-
-//transformar string em vetor de char
-//quicksort no vetor
-
 #include "lista.h"
 
 #define MAX_CHAR 256
@@ -35,12 +30,28 @@ int main(){
     {
         if(V[i] != 0){
             tArvore* arv = abb_cria();
-            arv = abb_insere(arv, i, V[i]);
+            arv = abb_insere(arv, i, V[i], NULL, NULL);
             insereCelulaNaLista(arv, lista);
         }
     }
-    
+
     imprimeLista(lista);
+    printf("\n\n");
+
+    while(listaUnica(lista) == 0){
+        int peso_tr = retornaPeso(retornaPrimeiraArv(lista)) + retornaPeso(retornaSegundaArv(lista));
+
+        tArvore* t3 = abb_cria();
+        t3 = abb_insere(t3, '\0', peso_tr, retornaPrimeiraArv(lista), retornaSegundaArv(lista));
+        insereCelulaNaLista(t3, lista);
+        
+        retiraItem(lista, retornaPrimeiraArv(lista));
+        retiraItem(lista, retornaPrimeiraArv(lista));
+
+        imprimeLista(lista);
+        printf("\n\n");
+
+    }
 
     liberaLista(lista);
 
