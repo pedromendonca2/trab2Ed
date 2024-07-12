@@ -37,18 +37,12 @@ void abb_imprime(tArvore *a)
 
 tArvore *abb_insere(tArvore *a, char letra, int peso, tArvore* t1, tArvore* t2)
 {
-    if (a == NULL)
-    {
-        a = (tArvore *)malloc(sizeof(tArvore));
-        a->letra = letra;
-        a->peso = peso;
-        a->esq = a->dir = NULL;
-    }
 
-    if(t1 != NULL && t2 != NULL){
-        a->esq = t1;
-        a->dir = t2;
-    }
+    a = (tArvore *)malloc(sizeof(tArvore));
+    a->letra = letra;
+    a->peso = peso;
+    a->esq = t1;
+    a->dir = t2;
 
     return a;
 }
@@ -64,10 +58,7 @@ int retornaPeso(tArvore* r){
 void liberaArvore(tArvore* r)
 {
     if(r!=NULL){
-        //if(r->esq != NULL) abb_imprime(r->esq);
-        //printf("\n\n");
         liberaArvore(r->esq);
-        //if(r->dir != NULL) abb_imprime(r->dir);
         liberaArvore(r->dir);
         free(r);
     }

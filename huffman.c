@@ -26,8 +26,7 @@ int main(){
 
     tLista* lista = inicializaLista();
 
-    for (int i=0; i<MAX_CHAR; i++)
-    {
+    for (int i=0; i<MAX_CHAR; i++){
         if(V[i] != 0){
             tArvore* arv = abb_cria();
             arv = abb_insere(arv, i, V[i], NULL, NULL);
@@ -50,7 +49,6 @@ int main(){
 
         imprimeLista(lista);
         printf("\n\n");
-
     }
 
     liberaLista(lista);
