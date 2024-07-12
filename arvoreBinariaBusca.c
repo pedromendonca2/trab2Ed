@@ -53,6 +53,23 @@ tArvore *abb_insere(tArvore *a, char letra, int peso)
     return a;
 }
 
+char retornaLetra(tArvore* r){
+    return r->letra;
+}
+
+int retornaPeso(tArvore* r){
+    return r->peso;
+}
+
+void liberaArvore(tArvore* r)
+{
+    if(r!=NULL){
+        liberaArvore(r->esq);
+        liberaArvore(r->dir);
+        free(r);
+    }
+}
+
 // tArvore *abb_retira(tArvore *r, char letra, int peso)
 // {
 //     if (r == NULL)
@@ -99,12 +116,3 @@ tArvore *abb_insere(tArvore *a, char letra, int peso)
 //     }
 //     return r;
 // }
-
-void liberaArvore(tArvore* r)
-{
-    if(r!=NULL){
-        liberaArvore(r->esq);
-        liberaArvore(r->dir);
-        free(r);
-    }
-}

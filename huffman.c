@@ -29,13 +29,22 @@ int main(){
         }
     }
 
-    //cria lista, para cada indice do vetor maior que zero, cria arvore e incrementa a lista com a arvore
+    tLista* lista = inicializaLista();
 
+    for (int i=0; i<MAX_CHAR; i++)
+    {
+        if(V[i] != 0){
+            tArvore* arv = abb_cria();
+            arv = abb_insere(arv, i, V[i]);
+            insereCelulaNaLista(arv, lista);
+        }
+    }
+    
+    imprimeLista(lista);
 
-    // for(int i=0; i<MAX_CHAR; i++){
-    //     printf("%d | ", V[i]);
-    //     if(V[i] != 0) printf("(%c)\n", i);
-    // }
+    liberaLista(lista);
+
+    fclose(file_pointer);
 
     return 0;
 }

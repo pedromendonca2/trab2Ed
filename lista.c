@@ -19,30 +19,58 @@ tCelula* liberaCelula(tCelula* cel){
     return prox;
 }
 
-tTipoLista* inicializaLista(){
-    tTipoLista* lista = malloc(sizeof(tTipoLista));
+tLista* inicializaLista(){
+    tLista* lista = malloc(sizeof(tLista));
     lista->primeiro = NULL;
     lista->ultimo = NULL;
 
     return lista;
 }
 
-void insereCelulaNaLista(tArvore* arv, tTipoLista* lista){
+void insereCelulaNaLista(tArvore* arv, tLista* lista){
 
     tCelula* novo = malloc(sizeof(tCelula));
 
     if(lista->ultimo == NULL){
         lista->primeiro = lista->ultimo = novo;
-    } else{
+        ////////////////////////////////////
+        lista->ultimo->arv = arv;
+        lista->ultimo->prox = NULL;
+    } else if(retornaPeso(arv) >= retornaPeso(lista->ultimo->arv)){
         lista->ultimo->prox = novo;
         lista->ultimo = lista->ultimo->prox;
+        ///////////////////////////////////
+        lista->ultimo->arv = arv;
+        lista->ultimo->prox = NULL;
+    } else{
+        novo->arv = arv;
+        novo->prox = lista->primeiro;
+        lista->primeiro = novo;
     }
-
-    lista->ultimo->arv = arv;
-    lista->ultimo->prox = NULL;
 }
 
-// void retiraItem(tTipoLista* lista, char letra){
+
+void imprimeLista(tLista* lista){
+    tCelula* aux;
+    aux = lista->primeiro;
+
+    while(aux != NULL){
+        printf("Letra: %c ; peso: %d\n", retornaLetra(aux->arv), retornaPeso(aux->arv));
+        aux = aux->prox;
+    }
+}
+
+void liberaLista(tLista* lista){
+    tCelula *cel = lista->primeiro;
+
+    while(cel != NULL){
+        cel = liberaCelula(cel);
+    }
+
+    free(lista);
+}
+
+// void retiraItem(tLista* lista, char letra){
 //     tCelula* ant = NULL;
 //     tCelula* p = lista->primeiro;
 
@@ -74,23 +102,3 @@ void insereCelulaNaLista(tArvore* arv, tTipoLista* lista){
 
 //     liberaCelula(p);
 // }
-
-// void imprimeLista(tTipoLista* lista){
-//     tCelula* aux;
-//     aux = lista->primeiro;
-
-//     while(aux != NULL){
-//         printf("Nome: %s, preco: %d e codigo: %d\n", retornaNome(aux->produto), retornaPreco(aux->produto), retornaCodigo(aux->produto));
-//         aux = aux->prox;
-//     }
-// }
-
-void liberaLista(tTipoLista* lista){
-    tCelula *cel = lista->primeiro;
-
-    while(cel != NULL){
-        cel = liberaCelula(cel);
-    }
-
-    free(lista);
-}
