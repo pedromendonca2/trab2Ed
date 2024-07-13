@@ -6,8 +6,6 @@ typedef struct lista tLista;
 
 #include "arvoreBinariaBusca.h"
 
-tCelula* liberaCelula(tCelula* cel);
-
 tLista* inicializaLista();
 
 void encontraLugarNaLista(tArvore* arv, tLista* lista);

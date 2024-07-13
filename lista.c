@@ -10,15 +10,6 @@ struct lista{
     tCelula* ultimo;
 };
 
-// tCelula* liberaCelula(tCelula* cel){
-
-//     tCelula* prox = cel->prox;
-//     liberaArvore(cel->arv);
-//     free(cel);
-
-//     return prox;
-// }
-
 tLista* inicializaLista(){
     tLista* lista = malloc(sizeof(tLista));
     lista->primeiro = NULL;
@@ -73,14 +64,14 @@ void retiraItem(tLista* lista, tArvore* arv){
 
     if(p == lista->primeiro && p == lista->ultimo){
         lista->primeiro = lista->ultimo = NULL;
-        //liberaCelula(p);
+        free(p);
         return; 
     }
 
     if(p == lista->ultimo){
         lista->ultimo = ant; 
         ant->prox = NULL; 
-        //liberaCelula(p);
+        free(p);
         return;
     }
 
@@ -90,7 +81,7 @@ void retiraItem(tLista* lista, tArvore* arv){
         ant->prox = p->prox;
     } 
 
-    //liberaCelula(p);
+    free(p);
 }
 
 void imprimeLista(tLista* lista){
