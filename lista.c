@@ -10,14 +10,14 @@ struct lista{
     tCelula* ultimo;
 };
 
-tCelula* liberaCelula(tCelula* cel){
+// tCelula* liberaCelula(tCelula* cel){
 
-    tCelula* prox = cel->prox;
-    liberaArvore(cel->arv);
-    free(cel);
+//     tCelula* prox = cel->prox;
+//     liberaArvore(cel->arv);
+//     free(cel);
 
-    return prox;
-}
+//     return prox;
+// }
 
 tLista* inicializaLista(){
     tLista* lista = malloc(sizeof(tLista));
@@ -118,9 +118,13 @@ tArvore* retornaSegundaArv(tLista *l){
 
 void liberaLista(tLista* lista){
     tCelula *cel = lista->primeiro;
+    tCelula* prox = NULL;
 
     while(cel != NULL){
-        cel = liberaCelula(cel);
+        prox = cel->prox;
+        liberaArvore(cel->arv);
+        free(cel);
+        cel = prox;
     }
 
     free(lista);
