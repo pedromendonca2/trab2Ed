@@ -1,26 +1,28 @@
 #include "lista.h"
 
 #define MAX_CHAR 256
+#define BUFFER_SIZE 1024 // Tamanho do buffer para leitura com fread
 
 int main(){
 
-    unsigned char n;
-    int V[256];
+    unsigned char buffer[BUFFER_SIZE];
+    int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
 
-    for(int i=0; i<MAX_CHAR; i++){
-        V[i] = 0;
-    }
+    // for(int i=0; i<MAX_CHAR; i++){
+    //     V[i] = 0;
+    // }
 
-    FILE *file_pointer = fopen("./texto_1.txt", "r");
+    FILE *file_pointer = fopen("./texto_1.txt", "rb");
     if (file_pointer == NULL)
     {
         printf("Arquivo nao foi aberto corretamente\n");
         exit(1);
     }
 
-    while(fscanf(file_pointer, "%c", &n) == 1){
-        for(int i=0; i<MAX_CHAR; i++){ //Incrementa o vetor de acordo com a letra lida correspondende ao código ASCII que é seu índice
-            if(i == n) V[i]++;
+    size_t bytesRead;
+    while((bytesRead = fread(buffer, sizeof(unsigned char), BUFFER_SIZE, file_pointer)) > 0){ //Enquanto le um char (um byte) ele continua
+        for(size_t i=0; i<bytesRead; i++){ 
+            V[buffer[i]]++; //Incrementa o vetor de acordo com a letra lida correspondende ao código ASCII que é seu índice
         }
     }
 
