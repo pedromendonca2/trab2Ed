@@ -3,10 +3,13 @@
 
 typedef struct celula tCelula;
 typedef struct lista tLista;
+typedef struct tabela tTabela;
 
 #include "arvoreBinariaBusca.h"
 
 tLista* inicializaLista();
+
+tTabela** criaTabela(tLista* lista, int num);
 
 void encontraLugarNaLista(tArvore* arv, tLista* lista);
 
@@ -21,6 +24,12 @@ int listaUnica(tLista* l);
 tArvore* retornaPrimeiraArv(tLista* l);
 
 tArvore* retornaSegundaArv(tLista *l);
+
+char retornaLetraTab(tTabela* tab);
+
+char* retornaBinarioTab(tTabela* tab);
+
+void liberaTabela(tTabela** tab, int num);
 
 void liberaLista(tLista* lista);
 

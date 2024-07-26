@@ -52,6 +52,10 @@ char retornaLetra(tArvore* r){
 }
 
 int retornaPeso(tArvore* r){
+    if(r == NULL){
+        printf("Um abraco\n");
+        exit(1);
+    }
     return r->peso;
 }
 

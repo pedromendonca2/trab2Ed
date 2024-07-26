@@ -10,6 +10,11 @@ struct lista{
     tCelula* ultimo;
 };
 
+struct tabela{
+    char letra;
+    char* binario;
+};
+
 tLista* inicializaLista(){
     tLista* lista = malloc(sizeof(tLista));
     lista->primeiro = NULL;
@@ -18,17 +23,45 @@ tLista* inicializaLista(){
     return lista;
 }
 
+tTabela** criaTabela(tLista* lista, int num){
+    tCelula* aux = lista->primeiro;
+    tTabela** vet = malloc(num * sizeof(tTabela*));
+    int i = 0;
+
+    while(aux != NULL){
+        vet[i] = malloc(sizeof(tTabela));
+        vet[i]->letra = retornaLetra(aux->arv);
+        vet[i]->binario = NULL;
+        i++;
+        aux = aux->prox;
+    }
+
+    return vet;
+}
+
 void encontraLugarNaLista(tArvore* arv, tLista* lista){
     tCelula* aux = lista->primeiro;
     tCelula* novo = malloc(sizeof(tCelula));
 
-    while(retornaPeso(arv) < retornaPeso(aux->arv)){
-        aux = aux->prox;
-    }
+    // printf("letra arv: %c\n", retornaLetra(arv));
+    // printf("peso arv: %d\n", retornaPeso(arv));
 
-    novo->arv = arv;
-    novo->prox = aux->prox;
-    aux->prox = novo;
+    if(retornaPeso(arv) <= retornaPeso(aux->arv)){
+        novo->arv = arv;
+        novo->prox = aux;
+        lista->primeiro = novo;
+    } else{
+        while(aux->prox != NULL && retornaPeso(arv) > retornaPeso(aux->prox->arv)){
+            aux = aux->prox;
+            // if(aux == NULL){
+            //     printf("Um abraco\n");
+            //     exit(1);
+            // }
+        }
+        novo->arv = arv;
+        novo->prox = aux->prox;
+        aux->prox = novo;
+    }
 }
 
 void insereCelulaNaLista(tArvore* arv, tLista* lista){
@@ -85,8 +118,7 @@ void retiraItem(tLista* lista, tArvore* arv){
 }
 
 void imprimeLista(tLista* lista){
-    tCelula* aux;
-    aux = lista->primeiro;
+    tCelula* aux = lista->primeiro;
 
     while(aux != NULL){
         printf("Letra: %c ; peso: %d\n", retornaLetra(aux->arv), retornaPeso(aux->arv));
@@ -105,6 +137,21 @@ tArvore* retornaPrimeiraArv(tLista* l){
 
 tArvore* retornaSegundaArv(tLista *l){
     return l->primeiro->prox->arv;
+}
+
+char retornaLetraTab(tTabela* tab){
+    return tab->letra;
+}
+
+char* retornaBinarioTab(tTabela* tab){
+    return tab->binario;
+}
+
+void liberaTabela(tTabela** tab, int num){
+    for(int i=0; i<num; i++){
+        free(tab[i]);
+    }
+    free(tab);
 }
 
 void liberaLista(tLista* lista){

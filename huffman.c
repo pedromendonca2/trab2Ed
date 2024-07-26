@@ -8,11 +8,7 @@ int main(){
     unsigned char buffer[BUFFER_SIZE];
     int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
 
-    // for(int i=0; i<MAX_CHAR; i++){
-    //     V[i] = 0;
-    // }
-
-    FILE *file_pointer = fopen("./texto_1.txt", "rb");
+    FILE *file_pointer = fopen("./figura.png", "rb");
     if (file_pointer == NULL)
     {
         printf("Arquivo nao foi aberto corretamente\n");
@@ -27,14 +23,19 @@ int main(){
     }
 
     tLista* lista = inicializaLista();
+    int numLeaves = 0;
 
     for (int i=0; i<MAX_CHAR; i++){ //Cria arvores com um só nó nas posições do vetor que representam uma letra do texto
         if(V[i] != 0){
+            //printf("letra e peso: %c e %d\n", i, V[i]);
             tArvore* arv = abb_cria();
             arv = abb_insere(arv, i, V[i], NULL, NULL);
             insereCelulaNaLista(arv, lista);
+            numLeaves++;
         }
     }
+
+    tTabela** tabela = criaTabela(lista, numLeaves);
 
     imprimeLista(lista);
     printf("\n\n");
@@ -54,6 +55,9 @@ int main(){
         printf("\n\n");
     }
 
+    //for(int i=0; i<numLeaves; i++) printf("letra: %c\n", retornaLetraTab(tabela[i]));
+
+    liberaTabela(tabela, numLeaves);
     liberaLista(lista);
 
     fclose(file_pointer);
