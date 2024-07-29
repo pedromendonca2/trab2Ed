@@ -1,6 +1,15 @@
 #include "lista.h"
 #include <string.h>
 
+/*
+-----------------------------------------------
+-----------------------------------------------
+CODIGOS DE MANIPULACAO DE ESTRUTURAS DE DADOS
+-----------------------------------------------
+-----------------------------------------------
+*/
+
+
 struct celula{
     tArvore* arv;
     tCelula* prox;
@@ -231,7 +240,7 @@ tArvore *retornaHuffman(tLista *lista){
     return novo;
 }
 
-// gera a tabela de caminhos até o caracter
+// gera a tabela de caminhos ateh o caracter
 char **allocaCaminhosParaLetra(int altura_da_arvore)
 {
     char **registroDeCaminhos = (char**)malloc(sizeof(char*)* 256);
@@ -242,7 +251,7 @@ char **allocaCaminhosParaLetra(int altura_da_arvore)
     return registroDeCaminhos;
 }
 
-//faz os caminhos até o caracter
+//faz os caminhos ateh o caracter
 void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *caminho, tArvore *raiz)
 {
     char esq[alturaMaximaDaArvore], dir[alturaMaximaDaArvore];// strings podem ter no maximo o tamanho da altura da arvore
@@ -278,24 +287,163 @@ void imprimeOsCaminhos(char **registroDeCaminhos)
     }
 }
 
+// gera o binario em formato de string ex: "10010100"
+void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath)
+{
+    FILE *arquivo_texto = fopen(filepath, "r");
+    if(arquivo_texto == NULL)
+    {
+        printf("arquivo texto nao abriu\n");
+        exit(1);
+    }
+    FILE *arquivo_binario_string = fopen("stringbinario.txt", "w");
+    if(arquivo_binario_string == NULL)
+    {
+        printf("Arquivo texto em binario abriu\n");
+        exit(0);
+    }
+    unsigned char c;
+    while(fscanf(arquivo_texto,"%c", &c) == 1)
+    {
+        fprintf(arquivo_binario_string, "%s", registroDeCaminhos[c]);
+    }
+    fclose(arquivo_binario_string);
+    fclose(arquivo_texto);
+}
+
+// compactar o arquivo em bytes
+void compactado()
+{
+    FILE *arquivo = fopen("compactado.bin.comp", "wb");
+    if(arquivo == NULL)
+    {
+        printf("Arquivo compactado.bin não abriu para escrita\n");
+        exit(1);
+    }
+    FILE *arquivo2 = fopen("stringbinario.txt", "r");
+    if(arquivo2 == NULL){
+        printf("stringbinario.txt nao foi aberto para conversao em binario\n");
+        exit(0);
+    }
+    int i = 0, j = 7;
+    unsigned char byte = 0, base, letra;
+    while(fscanf(arquivo2, "%c", &letra) == 1)
+    {
+        base = 1;
+        if(letra == '1'){
+            base = base << j;
+            byte = byte | base;
+        }
+        j--;
+        // byte feito
+        if(j<0)
+        {
+            fwrite(&byte, sizeof(unsigned char), 1, arquivo);
+            byte = 0;
+            j = 7;
+        }
+    }
+    // se algum byte em formação nao foi colocado no binario
+    if(j != 7)
+    {
+        fwrite(&byte, sizeof(unsigned char), 1, arquivo);
+    }
+    fclose(arquivo);
+    fclose(arquivo2);
+}
+
+//libera caminhos para as strings
+void liberaCaminhos(char **caminhos)
+{
+    if(caminhos == NULL) return;
+    int i;
+    for( i =0 ; i < 256 ; i++)
+    {
+        if(caminhos[i] != NULL) free(caminhos[i]);
+    }
+    free(caminhos);
+}
+
+//armazena a arvore em binario
+void armazenaArvore(tArvore * raiz, FILE *file)
+{
+
+}
 
 
 
 
+/*
+----------------------------
+----------------------------
+CODIGOS DESCOMPACTADOR
+----------------------------
+----------------------------
+*/
 
+void descompactar(tArvore *raiz)
+{
+    FILE *arquivo = fopen("compactado.bin.comp", "rb");
+    unsigned char byte;
+    int i;
+    tArvore *aux = raiz;
 
+    if(arquivo == NULL)
+    {
+        printf("Arquivo de descompatcacao nao abriu!\n");
+        exit(0);
+    }
 
+    FILE *ARQUIVO_DE_SAIDA = fopen("saida.txt", "w");
+    if(ARQUIVO_DE_SAIDA == NULL)
+    {
+        printf("Arquivvo de saida nao abriu!\n");
+        exit(1);
+    }
 
+    //leitura dos bytes
+    while(fread(&byte, sizeof(unsigned char), 1, arquivo))
+    {
+        // fazer o surf pela arvore
+        for(i=7 ; i>-1 ; i--)
+        {
+            if(ehBitUm(byte, i))
+            {
+                aux = retornaDir(aux);
+            }
+            else
+            {
+                aux = retornaEsq(aux);
+            }
+            //achou uma folha
+            if(retornaEsq(aux) == NULL && retornaDir(aux) == NULL)
+            {
+                fprintf(ARQUIVO_DE_SAIDA, "%c", retornaLetra(aux));
+                aux = raiz;
+            }
+        }
+    }
+    fclose(arquivo);
+    fclose(ARQUIVO_DE_SAIDA);
+}
 
+unsigned int ehBitUm(unsigned char byte, int i)
+{
+    unsigned char mascara = (1 << i);
+    return byte & mascara;
+}
 
+tArvore *recuperaArvore(FILE *arquivo)
+{
 
+}
 
 
 
 /*
 -----------------------------
 -----------------------------
-CÓDIGOS NÃO UTILIZADOS
+CODIGOS NAO UTILIZADOS
 -----------------------------
 -----------------------------
 */

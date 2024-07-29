@@ -3,12 +3,17 @@
 #define MAX_CHAR 256
 #define BUFFER_SIZE 1024 // Tamanho do buffer para leitura com fread
 
-int main(){
-
+int main(int argc, char **argv){
+    if(argc <2)
+    {
+        printf("Arquivo de string de texto esta faltando\n");
+        exit(2);
+    }
     unsigned char buffer[BUFFER_SIZE];
     int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
-
-    FILE *file_pointer = fopen("./biblia.txt", "rb");
+    unsigned char filepath[2048];
+    strcpy(filepath, argv[1]);
+    FILE *file_pointer = fopen(filepath, "rb");
     if (file_pointer == NULL)
     {
         printf("Arquivo nao foi aberto corretamente\n");
@@ -36,15 +41,15 @@ int main(){
             numLeaves++;
         }
     }
-
-    tArvore *huffman = retornaHuffman(lista);
-    char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);
-    fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
-    
-    //for(int i=0; i<numLeaves; i++) printf("letra: %c\n", retornaLetraTab(tabela[i]));
-    liberaLista(lista);
-    liberaArvore(huffman);
     fclose(file_pointer);
 
+    tArvore *huffman = retornaHuffman(lista);
+    char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);//falta liberar isso aqui
+    fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
+    arquivoBinarioEmString(caminhos, filepath);
+    compactado();
+    liberaCaminhos(caminhos);
+    liberaLista(lista);
+    liberaArvore(huffman);
     return 0;
 }

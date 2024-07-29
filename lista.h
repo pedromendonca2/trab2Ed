@@ -45,5 +45,18 @@ void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *ca
 
 void imprimeOsCaminhos(char **registroDeCaminhos); // fazer testes
 
+void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath);
+
+void compactado();
+
+void liberaCaminhos(char **caminhos);
+
+void armazenaArvore(tArvore * raiz, FILE *arquivo);
+
+void descompactar(tArvore *raiz);
+
+unsigned int ehBitUm(unsigned char byte, int i);
+
+tArvore *recuperaArvore(FILE *arquivo);
 
 #endif
