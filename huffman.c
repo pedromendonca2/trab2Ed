@@ -8,24 +8,26 @@ int main(){
     unsigned char buffer[BUFFER_SIZE];
     int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
 
-    FILE *file_pointer = fopen("./figura.png", "rb");
+    FILE *file_pointer = fopen("./biblia.txt", "rb");
     if (file_pointer == NULL)
     {
         printf("Arquivo nao foi aberto corretamente\n");
         exit(1);
     }
 
+    /* le caracter por caracter */
     size_t bytesRead;
     while((bytesRead = fread(buffer, sizeof(unsigned char), BUFFER_SIZE, file_pointer)) > 0){ //Enquanto le um char (um byte) ele continua
         for(size_t i=0; i<bytesRead; i++){ 
-            V[buffer[i]]++; //Incrementa o vetor de acordo com a letra lida correspondende ao código ASCII que é seu índice
+            V[buffer[i]]++; //Incrementa o vetor de acordo com a letra lida correspondende ao codigo ASCII que eh seu indice
         }
     }
 
+    /* Ordena a lista de caracteres de modo crescente*/
     tLista* lista = inicializaLista();
     int numLeaves = 0;
 
-    for (int i=0; i<MAX_CHAR; i++){ //Cria arvores com um só nó nas posições do vetor que representam uma letra do texto
+    for (int i=0; i<MAX_CHAR; i++){ //Cria arvores com um soh noh nas posicoes do vetor que representam uma letra do texto
         if(V[i] != 0){
             //printf("letra e peso: %c e %d\n", i, V[i]);
             tArvore* arv = abb_cria();
@@ -35,31 +37,13 @@ int main(){
         }
     }
 
-    tTabela** tabela = criaTabela(lista, numLeaves);
-
-    imprimeLista(lista);
-    printf("\n\n");
-
-    while(listaUnica(lista) == 0){ //Enquanto houver mais de um elemento na lista cria mais uma árvore que absorve as duas primeiras
-        int peso_tr = retornaPeso(retornaPrimeiraArv(lista)) + retornaPeso(retornaSegundaArv(lista));
-
-        tArvore* t3 = abb_cria();
-        t3 = abb_insere(t3, '\0', peso_tr, retornaPrimeiraArv(lista), retornaSegundaArv(lista));
-        insereCelulaNaLista(t3, lista);
-        
-        //Retira os dois primeiros elementos da lista
-        retiraItem(lista, retornaPrimeiraArv(lista)); 
-        retiraItem(lista, retornaPrimeiraArv(lista));
-
-        imprimeLista(lista);
-        printf("\n\n");
-    }
-
+    tArvore *huffman = retornaHuffman(lista);
+    char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);
+    fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
+    
     //for(int i=0; i<numLeaves; i++) printf("letra: %c\n", retornaLetraTab(tabela[i]));
-
-    liberaTabela(tabela, numLeaves);
     liberaLista(lista);
-
+    liberaArvore(huffman);
     fclose(file_pointer);
 
     return 0;

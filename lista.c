@@ -1,4 +1,5 @@
 #include "lista.h"
+#include <string.h>
 
 struct celula{
     tArvore* arv;
@@ -11,7 +12,7 @@ struct lista{
 };
 
 struct tabela{
-    char letra;
+    unsigned char letra;
     char* binario;
 };
 
@@ -167,3 +168,157 @@ void liberaLista(tLista* lista){
 
     free(lista);
 }
+
+tCelula *retornaPrim(tLista *lista){
+    return lista->primeiro;
+}
+
+tArvore *retornaArvoreDaCelula(tCelula *c){
+    return c->arv;
+}
+
+/*
+-----------------------------------------
+-----------------------------------------
+CODIGOS CODIFICADOR
+-----------------------------------------
+-----------------------------------------
+*/
+
+//remove primeira arvore da lista
+tArvore *removePrimeiroDaLista(tLista *lista){
+    tCelula *primeira;
+    if(lista->primeiro != NULL){
+        primeira = lista->primeiro;
+        lista->primeiro = lista->primeiro->prox;
+        primeira->prox = NULL;
+    }
+    else{
+        return NULL;
+    }
+    if(primeira != NULL){
+        tArvore *a = primeira->arv;
+        free(primeira);
+        return a;
+    }
+    else{
+        return NULL;
+    }
+}
+
+//faz a arvore de huffman
+tArvore *retornaHuffman(tLista *lista){
+    tArvore *prim, *seg, *novo;
+    while(1){
+        prim = removePrimeiroDaLista(lista);
+        if(prim == NULL)
+        {
+            return novo;
+        }
+        seg = removePrimeiroDaLista(lista);
+        if(seg == NULL)
+        {
+            return novo;
+        }
+        if(lista->primeiro == NULL)
+        {
+            novo = abb_insere(novo, '\0', retornaPeso(prim)+retornaPeso(seg), prim, seg);
+            return novo;
+        }
+        novo = abb_insere(novo, '\0', retornaPeso(prim)+retornaPeso(seg), prim, seg);
+        insereCelulaNaLista(novo, lista);
+    }
+    return novo;
+}
+
+// gera a tabela de caminhos até o caracter
+char **allocaCaminhosParaLetra(int altura_da_arvore)
+{
+    char **registroDeCaminhos = (char**)malloc(sizeof(char*)* 256);
+    int i;
+    for(i =0 ; i<256 ; i++){
+        registroDeCaminhos[i] = calloc(altura_da_arvore, sizeof(char));
+    }
+    return registroDeCaminhos;
+}
+
+//faz os caminhos até o caracter
+void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *caminho, tArvore *raiz)
+{
+    char esq[alturaMaximaDaArvore], dir[alturaMaximaDaArvore];// strings podem ter no maximo o tamanho da altura da arvore
+    // se tiver na folha, salva o caminho
+    if(ehFolha(raiz))
+    {
+        strcpy(registroDeCaminhos[retornaLetra(raiz)], caminho);
+    }
+    //senao continua andando
+    else
+    {
+        strcpy(esq, caminho);//coloca zero
+        strcpy(dir, caminho);//coloca 1
+        strcat(esq, "0");
+        strcat(dir, "1");
+        fazOsCaminhos(registroDeCaminhos, alturaMaximaDaArvore, esq, retornaEsq(raiz));
+        fazOsCaminhos(registroDeCaminhos, alturaMaximaDaArvore, dir, retornaDir(raiz));
+    }
+}
+
+//exibe o caminho para o caracter
+void imprimeOsCaminhos(char **registroDeCaminhos)
+{
+    int i;
+    unsigned char c;
+    for(i =0 ; i<256 ; i++)
+    {
+        c = i;
+        if(strlen(registroDeCaminhos[i]) > 0)
+        {
+            printf("caminho: %s caracter:%c\n", registroDeCaminhos[i], c);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+-----------------------------
+-----------------------------
+CÓDIGOS NÃO UTILIZADOS
+-----------------------------
+-----------------------------
+*/
+
+
+/*
+-------------------------------
+HUFFMAN DO PEDRO HENRIQUE
+-------------------------------
+/*
+    tArvore *t3= NULL;
+    while(listaUnica(lista) == 0){ //Enquanto houver mais de um elemento na lista cria mais uma arvore que absorve as duas primeiras
+        int peso_tr = retornaPeso(retornaPrimeiraArv(lista)) + retornaPeso(retornaSegundaArv(lista));
+
+        t3 = abb_cria();
+        t3 = abb_insere(t3, '\0', peso_tr, retornaPrimeiraArv(lista), retornaSegundaArv(lista));
+        insereCelulaNaLista(t3, lista);
+        
+        //Retira os dois primeiros elementos da lista
+        retiraItem(lista, retornaPrimeiraArv(lista)); 
+        retiraItem(lista, retornaPrimeiraArv(lista));
+
+        //imprimeLista(lista);
+        //printf("\n");
+    }
+*/

@@ -2,10 +2,9 @@
 
 struct arv
 {
-    char letra;
+    unsigned char letra;
     int peso;
-    tArvore *esq;
-    tArvore *dir;
+    tArvore *esq, *dir ;
 };
 
 tArvore *abb_cria(void)
@@ -18,22 +17,10 @@ void abb_imprime(tArvore *a)
     if (a != NULL)
     {
         abb_imprime(a->esq);
-        printf("LETRA: %c\n", a->letra);
+        printf("LETRA:%cPESO:%d\n", a->letra, a->peso);
         abb_imprime(a->dir);
     }
 }
-
-// tArvore *abb_busca(tArvore *r, int v)
-// {
-//     if (r == NULL)
-//         return NULL;
-//     else if (retornaMatricula(r->a) > v)
-//         return abb_busca(r->esq, v);
-//     else if (retornaMatricula(r->a) < v)
-//         return abb_busca(r->dir, v);
-//     else
-//         return r;
-// }
 
 tArvore *abb_insere(tArvore *a, char letra, int peso, tArvore* t1, tArvore* t2)
 {
@@ -47,7 +34,7 @@ tArvore *abb_insere(tArvore *a, char letra, int peso, tArvore* t1, tArvore* t2)
     return a;
 }
 
-char retornaLetra(tArvore* r){
+unsigned char retornaLetra(tArvore* r){
     return r->letra;
 }
 
@@ -66,6 +53,44 @@ void liberaArvore(tArvore* r)
         liberaArvore(r->dir);
         free(r);
     }
+}
+
+void imprimeNosFolha(tArvore *raiz, int altura){
+    if(raiz == NULL) return;
+    if(raiz->esq == NULL && raiz->dir == NULL){
+        printf("%c %d\n", raiz->letra, altura);
+    }
+    else{
+        imprimeNosFolha(raiz->esq, altura+1);
+        imprimeNosFolha(raiz->dir, altura +1);
+    }
+}
+
+int alturaDaArvore(tArvore *raiz){
+    int esq, dir;
+    if( raiz == NULL) return -1;
+    else{
+        esq = alturaDaArvore(raiz->esq) + 1;
+        dir = alturaDaArvore(raiz->dir) +1;
+    }
+    if(dir>esq) return dir;
+    return esq;
+}
+
+tArvore *retornaEsq(tArvore *a)
+{
+    return a->esq;
+}
+
+tArvore *retornaDir(tArvore *a)
+{
+    return a->dir;
+}
+
+int ehFolha(tArvore *a)
+{
+    if(a->dir == NULL && a->esq == NULL) return 1;
+    return 0;
 }
 
 // tArvore *abb_retira(tArvore *r, char letra, int peso)
@@ -114,3 +139,6 @@ void liberaArvore(tArvore* r)
 //     }
 //     return r;
 // }
+
+
+

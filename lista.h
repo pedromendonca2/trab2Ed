@@ -33,4 +33,17 @@ void liberaTabela(tTabela** tab, int num);
 
 void liberaLista(tLista* lista);
 
+tCelula *retornaPrim(tLista *lista);
+
+tArvore *removePrimeiroDaLista(tLista *lista);
+
+tArvore *retornaHuffman(tLista *lista);
+
+char **allocaCaminhosParaLetra(int altura_da_arvore);
+
+void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *caminho, tArvore *raiz);
+
+void imprimeOsCaminhos(char **registroDeCaminhos); // fazer testes
+
+
 #endif
