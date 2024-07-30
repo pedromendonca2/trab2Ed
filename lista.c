@@ -312,7 +312,7 @@ void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath)
 }
 
 // compactar o arquivo em bytes
-void compactado()
+void compactado(tArvore* huffman)
 {
     FILE *arquivo = fopen("compactado.bin.comp", "wb");
     if(arquivo == NULL)
@@ -320,6 +320,10 @@ void compactado()
         printf("Arquivo compactado.bin não abriu para escrita\n");
         exit(1);
     }
+
+    //Salvar a árvore de Huffman no início do arquivo binário
+    armazenaArvore(huffman, arquivo);
+
     FILE *arquivo2 = fopen("stringbinario.txt", "r");
     if(arquivo2 == NULL){
         printf("stringbinario.txt nao foi aberto para conversao em binario\n");
@@ -364,14 +368,6 @@ void liberaCaminhos(char **caminhos)
     free(caminhos);
 }
 
-//armazena a arvore em binario
-void armazenaArvore(tArvore * raiz, FILE *file)
-{
-
-}
-
-
-
 
 /*
 ----------------------------
@@ -384,20 +380,23 @@ CODIGOS DESCOMPACTADOR
 void descompactar(tArvore *raiz)
 {
     FILE *arquivo = fopen("compactado.bin.comp", "rb");
+    if(arquivo == NULL)
+    {
+        printf("Arquivo de descompactacao nao abriu!\n");
+        exit(0);
+    }
+
+    // Recuperar a árvore de Huffman do início do arquivo binário
+    tArvore *huffman = recuperaArvore(arquivo);
+
     unsigned char byte;
     int i;
     tArvore *aux = raiz;
 
-    if(arquivo == NULL)
-    {
-        printf("Arquivo de descompatcacao nao abriu!\n");
-        exit(0);
-    }
-
     FILE *ARQUIVO_DE_SAIDA = fopen("saida.txt", "w");
     if(ARQUIVO_DE_SAIDA == NULL)
     {
-        printf("Arquivvo de saida nao abriu!\n");
+        printf("Arquivo de saida nao abriu!\n");
         exit(1);
     }
 
@@ -431,11 +430,6 @@ unsigned int ehBitUm(unsigned char byte, int i)
 {
     unsigned char mascara = (1 << i);
     return byte & mascara;
-}
-
-tArvore *recuperaArvore(FILE *arquivo)
-{
-
 }
 
 

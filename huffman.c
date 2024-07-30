@@ -4,7 +4,7 @@
 #define BUFFER_SIZE 1024 // Tamanho do buffer para leitura com fread
 
 int main(int argc, char **argv){
-    if(argc <2)
+    if(argc < 2)
     {
         printf("Arquivo de string de texto esta faltando\n");
         exit(2);
@@ -47,7 +47,7 @@ int main(int argc, char **argv){
     char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);//falta liberar isso aqui
     fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
     arquivoBinarioEmString(caminhos, filepath);
-    compactado();
+    compactado(huffman);
     liberaCaminhos(caminhos);
     liberaLista(lista);
     liberaArvore(huffman);

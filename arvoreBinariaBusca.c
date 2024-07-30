@@ -77,6 +77,40 @@ int alturaDaArvore(tArvore *raiz){
     return esq;
 }
 
+//armazena a arvore em binario
+void armazenaArvore(tArvore *raiz, FILE *file) {
+    if (raiz == NULL) {
+        unsigned char flag = 0;
+        fwrite(&flag, sizeof(unsigned char), 1, file);
+    } else {
+        unsigned char flag = 1;
+        fwrite(&flag, sizeof(unsigned char), 1, file);
+
+        unsigned char letra = retornaLetra(raiz);
+        fwrite(&letra, sizeof(unsigned char), 1, file);
+        
+        armazenaArvore(raiz->esq, file);
+        armazenaArvore(raiz->dir, file);
+    }
+}
+
+tArvore *recuperaArvore(FILE *arquivo) {
+    unsigned char flag;
+    fread(&flag, sizeof(unsigned char), 1, arquivo);
+
+    if (flag == 0) {
+        return NULL;
+    }
+
+    unsigned char letra;
+    fread(&letra, sizeof(unsigned char), 1, arquivo);
+
+    tArvore *esq = recuperaArvore(arquivo);
+    tArvore *dir = recuperaArvore(arquivo);
+
+    return abb_insere(NULL, letra, 0, esq, dir); // Assumindo peso 0 ao reconstruir
+}
+
 tArvore *retornaEsq(tArvore *a)
 {
     return a->esq;

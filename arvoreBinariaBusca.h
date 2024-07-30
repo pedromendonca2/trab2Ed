@@ -27,6 +27,10 @@ void imprimeNosFolha(tArvore *raiz, int altura);
 
 int alturaDaArvore(tArvore *raiz);
 
+void armazenaArvore(tArvore * raiz, FILE *arquivo);
+
+tArvore *recuperaArvore(FILE *arquivo);
+
 tArvore *retornaDir(tArvore *a);
 
 tArvore *retornaEsq(tArvore *a);
