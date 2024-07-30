@@ -43,7 +43,7 @@ char **allocaCaminhosParaLetra(int altura_da_arvore);
 
 void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *caminho, tArvore *raiz);
 
-void imprimeOsCaminhos(char **registroDeCaminhos); // fazer testes
+void imprimeOsCaminhos(char **registroDeCaminhos);
 
 void arquivoBinarioEmString(char **registroDeCaminhos, const char *filepath);
 

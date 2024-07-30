@@ -21,8 +21,8 @@ struct lista{
 };
 
 struct tabela{
-    unsigned char letra;
-    char* binario;
+    unsigned char letra; // Caractere
+    char* binario; // Representação binária do caractere
 };
 
 tLista* inicializaLista(){
@@ -33,6 +33,8 @@ tLista* inicializaLista(){
     return lista;
 }
 
+
+// Função para criar a tabela de códigos (tabela de mapeamento de caracteres)
 tTabela** criaTabela(tLista* lista, int num){
     tCelula* aux = lista->primeiro;
     tTabela** vet = malloc(num * sizeof(tTabela*));
@@ -49,12 +51,10 @@ tTabela** criaTabela(tLista* lista, int num){
     return vet;
 }
 
+// Ordena lista para que sua ordem necessariamente seja do caracter de menor para o de maior peso
 void encontraLugarNaLista(tArvore* arv, tLista* lista){
     tCelula* aux = lista->primeiro;
     tCelula* novo = malloc(sizeof(tCelula));
-
-    // printf("letra arv: %c\n", retornaLetra(arv));
-    // printf("peso arv: %d\n", retornaPeso(arv));
 
     if(retornaPeso(arv) <= retornaPeso(aux->arv)){
         novo->arv = arv;
@@ -63,10 +63,6 @@ void encontraLugarNaLista(tArvore* arv, tLista* lista){
     } else{
         while(aux->prox != NULL && retornaPeso(arv) > retornaPeso(aux->prox->arv)){
             aux = aux->prox;
-            // if(aux == NULL){
-            //     printf("Um abraco\n");
-            //     exit(1);
-            // }
         }
         novo->arv = arv;
         novo->prox = aux->prox;
@@ -74,6 +70,7 @@ void encontraLugarNaLista(tArvore* arv, tLista* lista){
     }
 }
 
+// Insere uma nova célula na lista de forma ordenada
 void insereCelulaNaLista(tArvore* arv, tLista* lista){
 
     if(lista->ultimo == NULL){
@@ -89,7 +86,7 @@ void insereCelulaNaLista(tArvore* arv, tLista* lista){
         ///////////////////////////////////
         lista->ultimo->arv = arv;
         lista->ultimo->prox = NULL;
-    } else{
+    } else{ // Caso de o peso do caracter em questao for menor do que o antecedente
         encontraLugarNaLista(arv, lista);
     }
 }
@@ -98,29 +95,29 @@ void retiraItem(tLista* lista, tArvore* arv){
     tCelula* ant = NULL;
     tCelula* p = lista->primeiro;
 
-    while(p != NULL && p->arv != arv){
+    while(p != NULL && p->arv != arv){ // Procura a célula a ser removida
         ant = p;
         p = p->prox;
     }
 
     if(p == NULL) return;
 
-    if(p == lista->primeiro && p == lista->ultimo){
+    if(p == lista->primeiro && p == lista->ultimo){ // Se for o único elemento
         lista->primeiro = lista->ultimo = NULL;
         free(p);
         return; 
     }
 
-    if(p == lista->ultimo){
+    if(p == lista->ultimo){ // Se for o último elemento
         lista->ultimo = ant; 
         ant->prox = NULL; 
         free(p);
         return;
     }
 
-    if(p == lista->primeiro){
+    if(p == lista->primeiro){ // Se for o primeiro elemento
         lista->primeiro = p->prox;    
-    } else{
+    } else{ // Se estiver no meio
         ant->prox = p->prox;
     } 
 
@@ -296,7 +293,7 @@ void arquivoBinarioEmString(char **registroDeCaminhos, const char *filepath)
         printf("arquivo texto nao abriu\n");
         exit(1);
     }
-    FILE *arquivo_binario_string = fopen("stringbinario.txt", "w");
+    FILE *arquivo_binario_string = fopen("stringbinario.txt", "w"); // Abre o arquivo onde a string binária será escrita
     if(arquivo_binario_string == NULL)
     {
         printf("Arquivo texto em binario abriu\n");
@@ -305,7 +302,7 @@ void arquivoBinarioEmString(char **registroDeCaminhos, const char *filepath)
     unsigned char c;
     while(fscanf(arquivo_texto,"%c", &c) == 1)
     {
-        fprintf(arquivo_binario_string, "%s", registroDeCaminhos[c]);
+        fprintf(arquivo_binario_string, "%s", registroDeCaminhos[c]); // Escreve a representação binária do caractere no arquivo de saída
     }
     fclose(arquivo_binario_string);
     fclose(arquivo_texto);
@@ -444,10 +441,11 @@ void descompactar(const char* nomeArquivo)
     fclose(ARQUIVO_DE_SAIDA);
 }
 
+// Função para verificar se o i-ésimo bit de um byte é 1
 unsigned int ehBitUm(unsigned char byte, int i)
 {
-    unsigned char mascara = (1 << i);
-    return byte & mascara;
+    unsigned char mascara = (1 << i); // Cria uma máscara com o bit i setado para 1
+    return byte & mascara; // Retorna o resultado da operação AND bit a bit entre o byte e a máscara
 }
 
 

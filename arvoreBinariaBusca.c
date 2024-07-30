@@ -66,6 +66,7 @@ void imprimeNosFolha(tArvore *raiz, int altura){
     }
 }
 
+//retorna a altura da arvore
 int alturaDaArvore(tArvore *raiz){
     int esq, dir;
     if( raiz == NULL) return -1;
@@ -81,11 +82,14 @@ int alturaDaArvore(tArvore *raiz){
 void armazenaArvore(tArvore *raiz, FILE *file) {
     if (raiz == NULL) {
         unsigned char flag = 0;
+        // Escreve um byte com valor 0 para indicar um NULL (subárvore vazia)
         fwrite(&flag, sizeof(unsigned char), 1, file);
     } else {
         unsigned char flag = 1;
+        // Escreve um byte com valor 1 para indicar que há um nó (não NULL)
         fwrite(&flag, sizeof(unsigned char), 1, file);
 
+        // Obtém a letra armazenada no nó atual e a escreve no arquivo
         unsigned char letra = retornaLetra(raiz);
         fwrite(&letra, sizeof(unsigned char), 1, file);
         
@@ -94,10 +98,13 @@ void armazenaArvore(tArvore *raiz, FILE *file) {
     }
 }
 
+// Função para reconstruir a árvore de Huffman a partir de um arquivo binário
 tArvore *recuperaArvore(FILE *arquivo) {
     unsigned char flag;
+    // Lê a flag do arquivo para determinar se há um nó ou um NULL
     fread(&flag, sizeof(unsigned char), 1, arquivo);
 
+    // Se a flag for 0, indica que é um NULL (subárvore vazia)
     if (flag == 0) {
         return NULL;
     }
@@ -108,6 +115,7 @@ tArvore *recuperaArvore(FILE *arquivo) {
     tArvore *esq = recuperaArvore(arquivo);
     tArvore *dir = recuperaArvore(arquivo);
 
+    // Insere o nó atual na árvore reconstruída com a letra e as subárvores
     return abb_insere(NULL, letra, 0, esq, dir); // Assumindo peso 0 ao reconstruir
 }
 

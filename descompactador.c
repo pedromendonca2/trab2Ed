@@ -1,5 +1,6 @@
 #include "lista.h"
 
+// Função principal para descompressão
 int main(int argc, char **argv){
 
     if(argc < 2)
@@ -17,7 +18,7 @@ int main(int argc, char **argv){
         exit(1);
     }
 
-    descompactar(filepath);
+    descompactar(filepath); // Chama a função de descompactação
 
     fclose(file_pointer);
     return 0;
