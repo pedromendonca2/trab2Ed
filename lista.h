@@ -51,7 +51,7 @@ void compactado(tArvore* huffman);
 
 void liberaCaminhos(char **caminhos);
 
-void descompactar(tArvore *raiz);
+void descompactar();
 
 unsigned int ehBitUm(unsigned char byte, int i);
 

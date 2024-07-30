@@ -44,10 +44,14 @@ int main(int argc, char **argv){
     fclose(file_pointer);
 
     tArvore *huffman = retornaHuffman(lista);
+    
     char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);//falta liberar isso aqui
     fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
     arquivoBinarioEmString(caminhos, filepath);
+
     compactado(huffman);
+    //descompactar();
+
     liberaCaminhos(caminhos);
     liberaLista(lista);
     liberaArvore(huffman);

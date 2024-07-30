@@ -377,7 +377,7 @@ CODIGOS DESCOMPACTADOR
 ----------------------------
 */
 
-void descompactar(tArvore *raiz)
+void descompactar()
 {
     FILE *arquivo = fopen("compactado.bin.comp", "rb");
     if(arquivo == NULL)
@@ -387,11 +387,10 @@ void descompactar(tArvore *raiz)
     }
 
     // Recuperar a árvore de Huffman do início do arquivo binário
-    tArvore *huffman = recuperaArvore(arquivo);
-
+    tArvore *arv = recuperaArvore(arquivo);
+    tArvore *aux = arv;
     unsigned char byte;
     int i;
-    tArvore *aux = raiz;
 
     FILE *ARQUIVO_DE_SAIDA = fopen("saida.txt", "w");
     if(ARQUIVO_DE_SAIDA == NULL)
@@ -418,10 +417,12 @@ void descompactar(tArvore *raiz)
             if(retornaEsq(aux) == NULL && retornaDir(aux) == NULL)
             {
                 fprintf(ARQUIVO_DE_SAIDA, "%c", retornaLetra(aux));
-                aux = raiz;
+                aux = arv;
             }
         }
     }
+
+    liberaArvore(arv);
     fclose(arquivo);
     fclose(ARQUIVO_DE_SAIDA);
 }
