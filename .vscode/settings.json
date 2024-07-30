@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "arvorebinariabusca.h": "c"
+        "arvorebinariabusca.h": "c",
+        "lista.h": "c"
     }
 }

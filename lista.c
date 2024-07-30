@@ -288,7 +288,7 @@ void imprimeOsCaminhos(char **registroDeCaminhos)
 }
 
 // gera o binario em formato de string ex: "10010100"
-void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath)
+void arquivoBinarioEmString(char **registroDeCaminhos, const char *filepath)
 {
     FILE *arquivo_texto = fopen(filepath, "r");
     if(arquivo_texto == NULL)
@@ -312,9 +312,13 @@ void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath)
 }
 
 // compactar o arquivo em bytes
-void compactado(tArvore* huffman)
+void compactado(tArvore* huffman, const char* nomeArquivo)
 {
-    FILE *arquivo = fopen("compactado.bin.comp", "wb");
+    // Criar uma string para o nome do arquivo de saída
+    char nomeArquivoCompactado[1024];
+    snprintf(nomeArquivoCompactado, sizeof(nomeArquivoCompactado), "%s.comp", nomeArquivo);
+
+    FILE *arquivo = fopen(nomeArquivoCompactado, "wb");
     if(arquivo == NULL)
     {
         printf("Arquivo compactado.bin não abriu para escrita\n");
@@ -329,7 +333,7 @@ void compactado(tArvore* huffman)
         printf("stringbinario.txt nao foi aberto para conversao em binario\n");
         exit(0);
     }
-    int i = 0, j = 7;
+    int j = 7;
     unsigned char byte = 0, base, letra;
     while(fscanf(arquivo2, "%c", &letra) == 1)
     {
@@ -377,13 +381,26 @@ CODIGOS DESCOMPACTADOR
 ----------------------------
 */
 
-void descompactar()
+void descompactar(const char* nomeArquivo)
 {
-    FILE *arquivo = fopen("compactado.bin.comp", "rb");
-    if(arquivo == NULL)
+    // Criar uma string para o nome do arquivo de saída
+    char nomeArquivoCompactado[1024];
+
+    // Copiar nomeArquivo para nomeArquivoCompactado
+    strncpy(nomeArquivoCompactado, nomeArquivo, sizeof(nomeArquivoCompactado) - 1);
+    nomeArquivoCompactado[sizeof(nomeArquivoCompactado) - 1] = '\0'; // Garantir terminação
+
+    // Remover ".comp" do final, se presente
+    char *posicaoComp = strstr(nomeArquivoCompactado, ".comp");
+    if (posicaoComp != NULL && posicaoComp == (nomeArquivoCompactado + strlen(nomeArquivoCompactado) - 5)) {
+        *posicaoComp = '\0';
+    }
+    
+    FILE *arquivo = fopen(nomeArquivo, "rb");
+    if (arquivo == NULL)
     {
         printf("Arquivo de descompactacao nao abriu!\n");
-        exit(0);
+        exit(1);
     }
 
     // Recuperar a árvore de Huffman do início do arquivo binário
@@ -392,7 +409,7 @@ void descompactar()
     unsigned char byte;
     int i;
 
-    FILE *ARQUIVO_DE_SAIDA = fopen("saida.txt", "w");
+    FILE *ARQUIVO_DE_SAIDA = fopen(nomeArquivoCompactado, "w");
     if(ARQUIVO_DE_SAIDA == NULL)
     {
         printf("Arquivo de saida nao abriu!\n");
@@ -448,7 +465,6 @@ CODIGOS NAO UTILIZADOS
 -------------------------------
 HUFFMAN DO PEDRO HENRIQUE
 -------------------------------
-/*
     tArvore *t3= NULL;
     while(listaUnica(lista) == 0){ //Enquanto houver mais de um elemento na lista cria mais uma arvore que absorve as duas primeiras
         int peso_tr = retornaPeso(retornaPrimeiraArv(lista)) + retornaPeso(retornaSegundaArv(lista));

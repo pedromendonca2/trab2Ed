@@ -4,21 +4,25 @@
 #define BUFFER_SIZE 1024 // Tamanho do buffer para leitura com fread
 
 int main(int argc, char **argv){
-    if(argc < 2)
-    {
+    
+    if(argc < 2){
         printf("Arquivo de string de texto esta faltando\n");
         exit(2);
     }
-    unsigned char buffer[BUFFER_SIZE];
-    int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
-    unsigned char filepath[2048];
-    strcpy(filepath, argv[1]);
+
+    // unsigned char filepath[2048];
+    // strcpy(filepath, argv[1]);
+    const char *filepath = argv[1];
+
     FILE *file_pointer = fopen(filepath, "rb");
     if (file_pointer == NULL)
     {
         printf("Arquivo nao foi aberto corretamente\n");
         exit(1);
     }
+
+    unsigned char buffer[BUFFER_SIZE];
+    int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
 
     /* le caracter por caracter */
     size_t bytesRead;
@@ -49,8 +53,7 @@ int main(int argc, char **argv){
     fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);
     arquivoBinarioEmString(caminhos, filepath);
 
-    compactado(huffman);
-    //descompactar();
+    compactado(huffman, filepath);
 
     liberaCaminhos(caminhos);
     liberaLista(lista);

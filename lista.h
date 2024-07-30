@@ -45,13 +45,13 @@ void fazOsCaminhos(char **registroDeCaminhos, int alturaMaximaDaArvore, char *ca
 
 void imprimeOsCaminhos(char **registroDeCaminhos); // fazer testes
 
-void arquivoBinarioEmString(char **registroDeCaminhos, unsigned char *filepath);
+void arquivoBinarioEmString(char **registroDeCaminhos, const char *filepath);
 
-void compactado(tArvore* huffman);
+void compactado(tArvore* huffman, const char* nomeArquivo);
 
 void liberaCaminhos(char **caminhos);
 
-void descompactar();
+void descompactar(const char* nomeArquivo);
 
 unsigned int ehBitUm(unsigned char byte, int i);
 
