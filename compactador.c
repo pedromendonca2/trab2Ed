@@ -7,7 +7,7 @@
 int main(int argc, char **argv){
     
     if(argc < 2){
-        printf("Arquivo de string de texto esta faltando\n");
+        printf("Arquivo de entrada esta faltando\n");
         exit(2);
     }
 
@@ -16,9 +16,16 @@ int main(int argc, char **argv){
     FILE *file_pointer = fopen(filepath, "rb");
     if (file_pointer == NULL)
     {
-        printf("Arquivo nao foi aberto corretamente\n");
+        printf("Arquivo de entrada nao foi aberto corretamente\n");
         exit(1);
     }
+
+    /*
+    Remove os arquivos .o gerados 
+    system("rm arvoreBinariaBusca.o");
+    system("rm compactador.o");
+    system("rm descompactador.o");
+    */
 
     unsigned char buffer[BUFFER_SIZE];
     int V[MAX_CHAR] = {0}; //Inicializa todas as posicoes do vetor com zero
@@ -45,7 +52,7 @@ int main(int argc, char **argv){
     }
     fclose(file_pointer);
 
-    tArvore *huffman = retornaHuffman(lista); // Cria a árvore de Huffman a partir da lista
+    tArvore *huffman = retornaHuffman(lista); // Cria a arvore de Huffman a partir da lista
     
     char **caminhos = allocaCaminhosParaLetra(alturaDaArvore(huffman)+1);//falta liberar isso aqui
     fazOsCaminhos(caminhos, alturaDaArvore(huffman) + 1, "", huffman);

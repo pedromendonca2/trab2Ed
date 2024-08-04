@@ -330,8 +330,18 @@ void compactado(tArvore* huffman, const char* nomeArquivo)
         printf("stringbinario.txt nao foi aberto para conversao em binario\n");
         exit(0);
     }
+
+    //Salvar o numero de bytes e de bits no ultimo byte
+    FILE *arquivo3 = fopen("numero.bin", "wb");
+    if(arquivo3 == NULL){
+        printf("numero.bin nao foi aberto para escrita\n");
+        exit(0);
+    }
+
+    //Guarda os bits em bytes
     int j = 7;
     unsigned char byte = 0, base, letra;
+    long unsigned int n = 0;
     while(fscanf(arquivo2, "%c", &letra) == 1)
     {
         base = 1;
@@ -346,6 +356,7 @@ void compactado(tArvore* huffman, const char* nomeArquivo)
             fwrite(&byte, sizeof(unsigned char), 1, arquivo);
             byte = 0;
             j = 7;
+            n++;
         }
     }
     // se algum byte em formação nao foi colocado no binario
@@ -353,8 +364,11 @@ void compactado(tArvore* huffman, const char* nomeArquivo)
     {
         fwrite(&byte, sizeof(unsigned char), 1, arquivo);
     }
+    fwrite(&n, sizeof(long unsigned int), 1, arquivo3);
+    fwrite(&j, sizeof(int), 1, arquivo3);
     fclose(arquivo);
     fclose(arquivo2);
+    fclose(arquivo3);
 }
 
 //libera caminhos para as strings
@@ -400,11 +414,22 @@ void descompactar(const char* nomeArquivo)
         exit(1);
     }
 
+    // Arquivo de recuperar numero de bytes e de bits no ultimo byte
+    FILE *arquivo2 = fopen("numero.bin", "rb");
+    if(arquivo2 == NULL)
+    {
+        printf("Arquivo de recuperar numero de bytes nao foi aberto");
+        exit(1);
+    }
+
     // Recuperar a árvore de Huffman do início do arquivo binário
     tArvore *arv = recuperaArvore(arquivo);
     tArvore *aux = arv;
     unsigned char byte;
-    int i;
+    int i, numeroDeBitsNoUltimoByte;
+    long unsigned int numeroDeBytes;
+    fread(&numeroDeBytes, sizeof(long unsigned int), 1, arquivo2);
+    fread(&numeroDeBitsNoUltimoByte, sizeof(int), 1, arquivo2);
 
     FILE *ARQUIVO_DE_SAIDA = fopen(nomeArquivoCompactado, "w");
     if(ARQUIVO_DE_SAIDA == NULL)
@@ -413,12 +438,19 @@ void descompactar(const char* nomeArquivo)
         exit(1);
     }
 
+    long unsigned int bytes = 0;
+    int sensor=0;
     //leitura dos bytes
     while(fread(&byte, sizeof(unsigned char), 1, arquivo))
     {
         // fazer o surf pela arvore
         for(i=7 ; i>-1 ; i--)
         {
+            if(bytes == numeroDeBytes && i == numeroDeBitsNoUltimoByte)
+            {
+                break;
+                sensor = 1;
+            }
             if(ehBitUm(byte, i))
             {
                 aux = retornaDir(aux);
@@ -434,6 +466,11 @@ void descompactar(const char* nomeArquivo)
                 aux = arv;
             }
         }
+        if(sensor == 1)
+        {
+            break;
+        }
+        bytes++;
     }
 
     liberaArvore(arv);
