@@ -475,6 +475,7 @@ void descompactar(const char* nomeArquivo)
 
     liberaArvore(arv);
     fclose(arquivo);
+    fclose(arquivo2);
     fclose(ARQUIVO_DE_SAIDA);
 }
 
